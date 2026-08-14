@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corrida Q3 2026 — Customer Ops</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root{
+  --asphalt: #15171c;
+  --asphalt-2: #1e2128;
+  --card: #23262e;
+  --card-line: #343842;
+  --white-flag: #f2f1ec;
+  --muted: #9498a3;
+  --red: #ff4d4f;
+  --red-soft: rgba(255,77,79,0.15);
+  --amber: #ffb703;
+  --amber-soft: rgba(255,183,3,0.15);
+  --green: #06d6a0;
+  --green-soft: rgba(6,214,160,0.15);
+  --gold: #ffd23f;
+  --gold-soft: rgba(255,210,63,0.18);
+  --plan: #4cc9f0;
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:transparent;}
+body{
+  font-family: var(--font-body);
+  color: var(--white-flag);
+  background: var(--asphalt);
+  min-height:100vh;
+}
+
+.checker{
+  height:10px;
+  background-image: repeating-linear-gradient(90deg, var(--white-flag) 0 10px, transparent 10px 20px);
+  background-size: 20px 10px;
+  opacity:0.9;
+}
+.checker.dim{opacity:0.18;}
+
+.wrap{
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 0 40px 0;
+  background: var(--asphalt);
+}
+
+/* HEADER */
+.header{
+  background: linear-gradient(180deg, var(--asphalt-2) 0%, var(--asphalt) 100%);
+  padding: 28px 24px 20px 24px;
+  position: relative;
+  border-bottom: 1px solid var(--card-line);
+}
+.eyebrow{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+h1{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  margin: 4px 0 2px 0;
+  letter-spacing: 0.5px;
+}
+.subtitle{
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.header-grid{
+  display:flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.countdown-box{
+  flex: 1;
+  min-width: 220px;
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+.countdown-num{
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--white-flag);
+}
+.countdown-label{
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.gauge-box{
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: 12px;
+  padding: 14px 20px;
+  text-align: center;
+  min-width: 200px;
+}
+.gauge-title{
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.gauge-status{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+/* SECTION */
+.section{ padding: 24px 24px 4px 24px; }
+.section-title{
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px 0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* OKR CARD */
+.okr-card{
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: 14px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  transition: border-color .2s ease;
+}
+.okr-card.gold-border{ border-color: var(--gold); }
+.okr-head{
+  padding: 16px 20px;
+  display:flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px dashed var(--card-line);
+}
+.okr-head-left{ flex:1; }
+.okr-tag{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.okr-title{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  margin: 2px 0 4px 0;
+}
+.okr-desc{
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.okr-avg{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  text-align: right;
+  min-width: 70px;
+}
+.okr-avg-label{
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: right;
+}
+
+/* KR ROW */
+.kr-row{
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--card-line);
+}
+.kr-row:last-child{ border-bottom: none; }
+.kr-top{
+  display:flex;
+  justify-content: space-between;
+  align-items:flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.kr-name{
+  font-weight: 600;
+  font-size: 14.5px;
+  line-height:1.35;
+}
+.kr-proof{
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-style: italic;
+}
+.kr-badges{
+  display:flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  white-space: nowrap;
+}
+.deadline-chip{
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--asphalt-2);
+  color: var(--muted);
+  border: 1px solid var(--card-line);
+}
+.status-dot{
+  display:inline-block;
+  width:8px; height:8px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.slider-row{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+input[type=range]{
+  -webkit-appearance:none;
+  flex:1;
+  height: 8px;
+  border-radius: 5px;
+  background: var(--asphalt-2);
+  outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:18px; height:18px;
+  border-radius:50%;
+  background: var(--white-flag);
+  border: 3px solid var(--asphalt);
+  cursor:pointer;
+  box-shadow: 0 0 0 1px var(--card-line);
+}
+input[type=range]::-moz-range-thumb{
+  width:18px; height:18px;
+  border-radius:50%;
+  background: var(--white-flag);
+  border: 3px solid var(--asphalt);
+  cursor:pointer;
+}
+.kr-pct{
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 15px;
+  min-width: 46px;
+  text-align: right;
+}
+.track-fill{
+  height: 6px;
+  border-radius: 4px;
+  margin-top: 8px;
+  background: var(--asphalt-2);
+  overflow:hidden;
+}
+.track-fill-inner{
+  height:100%;
+  border-radius:4px;
+  transition: width .3s ease, background .3s ease;
+}
+.trophy{ margin-left:6px; }
+
+/* EVIDENCE */
+.toggles-row{
+  display:flex;
+  gap: 16px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.evidence-toggle{
+  font-size: 12px;
+  color: var(--amber);
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  border-bottom: 1px dashed var(--amber);
+  padding-bottom: 1px;
+}
+.evidence-toggle:hover{ filter: brightness(1.15); }
+.plan-toggle{
+  font-size: 12px;
+  color: var(--plan);
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  border-bottom: 1px dashed var(--plan);
+  padding-bottom: 1px;
+}
+.plan-toggle:hover{ filter: brightness(1.15); }
+.plan-panel{
+  margin-top: 12px;
+  background: var(--asphalt-2);
+  border: 1px solid var(--card-line);
+  border-left: 3px solid var(--plan);
+  border-radius: 10px;
+  padding: 14px;
+}
+.plan-step{
+  display:flex;
+  align-items:flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+.plan-step input[type=checkbox]{
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--plan);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.plan-step.done span{
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.evidence-panel{
+  margin-top: 12px;
+  background: var(--asphalt-2);
+  border: 1px solid var(--card-line);
+  border-radius: 10px;
+  padding: 14px;
+}
+.evidence-empty{
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.evidence-entry{
+  border-left: 2px solid var(--green);
+  padding: 6px 0 6px 12px;
+  margin-bottom: 10px;
+}
+.evidence-entry-head{
+  display:flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  margin-bottom: 3px;
+}
+.evidence-entry-text{
+  font-size: 13.5px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.evidence-entry-link{
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid var(--green);
+}
+.evidence-entry-img{
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 8px;
+  border: 1px solid var(--card-line);
+  display: block;
+}
+.evidence-form{
+  border-top: 1px dashed var(--card-line);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.evidence-form-row{ margin-bottom: 8px; }
+.evidence-form label{
+  display:block;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.evidence-form input[type=text], .evidence-form textarea, .evidence-form input[type=url]{
+  width: 100%;
+  background: var(--asphalt);
+  border: 1px solid var(--card-line);
+  border-radius: 8px;
+  color: var(--white-flag);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+.evidence-form textarea{ min-height: 56px; }
+.evidence-add-btn{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  background: var(--amber);
+  color: #2b1d00;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.evidence-add-btn:hover{ filter: brightness(1.08); }
+.evidence-hint{
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* HISTORY */
+.history-card{
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.snap-btn{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  background: var(--green);
+  color: #08221a;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+.snap-btn:hover{ filter: brightness(1.08); }
+.snap-btn:active{ transform: translateY(1px); }
+.snap-empty{
+  color: var(--muted);
+  font-size: 13px;
+}
+.snap-item{
+  border: 1px solid var(--card-line);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  background: var(--asphalt-2);
+}
+.snap-item-head{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  margin-bottom: 8px;
+}
+.snap-label{
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size: 15px;
+}
+.snap-date{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.snap-row{
+  display:flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 3px 0;
+  color: var(--white-flag);
+}
+.snap-row .delta{
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+.delta.up{ color: var(--green); }
+.delta.down{ color: var(--red); }
+.delta.flat{ color: var(--muted); }
+
+.footer-note{
+  padding: 18px 24px 4px 24px;
+  color: var(--muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.save-indicator{
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  text-align:center;
+  padding: 6px 0 0 0;
+  min-height: 16px;
+}
+
+@media (max-width: 560px){
+  h1{ font-size: 25px; }
+  .countdown-num{ font-size: 36px; }
+  .header-grid{ flex-direction: column; align-items: stretch; }
+  .okr-avg{ font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="checker"></div>
+  <div class="header">
+    <div class="eyebrow">Tema do trimestre</div>
+    <h1>🏁 Corrida Q3 2026 — Customer Ops</h1>
+    <div class="subtitle">Aceleração Controlada — deixar o atendimento pronto pro dobro de volume no Q4, sem perder qualidade. Prazo final sem exceção: <strong>20/09</strong>.</div>
+    <div class="header-grid">
+      <div class="countdown-box">
+        <div class="countdown-num" id="countdownNum">--</div>
+        <div class="countdown-label" id="countdownLabel">dias até a linha de chegada (20/09)</div>
+      </div>
+      <div class="gauge-box">
+        <div class="gauge-title">Velocidade da equipe</div>
+        <svg width="160" height="90" viewBox="0 0 160 90">
+          <path d="M 15 80 A 65 65 0 0 1 145 80" fill="none" stroke="#343842" stroke-width="12" stroke-linecap="round"/>
+          <path id="gaugeArc" d="M 15 80 A 65 65 0 0 1 145 80" fill="none" stroke="#06d6a0" stroke-width="12" stroke-linecap="round" stroke-dasharray="204 204" stroke-dashoffset="204"/>
+          <line id="needle" x1="80" y1="80" x2="80" y2="25" stroke="#f2f1ec" stroke-width="3" stroke-linecap="round" style="transform-origin: 80px 80px;"/>
+          <circle cx="80" cy="80" r="5" fill="#f2f1ec"/>
+        </svg>
+        <div class="gauge-status" id="gaugeStatus">--</div>
+      </div>
+    </div>
+  </div>
+  <div class="checker dim"></div>
+
+  <div class="section">
+    <div class="section-title">📋 OKR 1 — Controle da qualidade e organização</div>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="okr-card" id="card-o1">
+      <div class="okr-head">
+        <div class="okr-head-left">
+          <div class="okr-tag">OKR 1</div>
+          <div class="okr-title">Saber o que os clientes procuram e com que qualidade atendemos</div>
+          <div class="okr-desc">Antes do pico chegar — motivo, auditoria e SLA/CSAT tudo dentro do SAC.</div>
+        </div>
+        <div>
+          <div class="okr-avg" id="avg-o1">--%</div>
+          <div class="okr-avg-label">média</div>
+        </div>
+      </div>
+
+      <div class="kr-row" data-kr="o1k1">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR1 — 90% dos atendimentos com motivo (tag) marcado no SAC</div>
+            <div class="kr-proof">Prova: painel do SAC com % de atendimentos com motivo em 90%+</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">📅 30/set</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o1k1">
+          <span class="kr-pct" data-kr="o1k1">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o1k1" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o1k1">📎 <span class="evidence-count" data-kr="o1k1">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o1k1">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o1k1" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o1k1" style="display:none;"></div>
+      </div>
+
+      <div class="kr-row" data-kr="o1k2">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR2 — Auditoria de qualidade automatizada no SAC, com nota por atendente</div>
+            <div class="kr-proof">Prova: módulo de auditoria rodando no SAC + notas por atendente no painel</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">📅 30/set</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o1k2">
+          <span class="kr-pct" data-kr="o1k2">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o1k2" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o1k2">📎 <span class="evidence-count" data-kr="o1k2">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o1k2">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o1k2" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o1k2" style="display:none;"></div>
+      </div>
+
+      <div class="kr-row" data-kr="o1k3">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR3 — SLA e CSAT no SAC: Métrica Marketplace ≥80% e CSAT ≥70%</div>
+            <div class="kr-proof">Prova: SLA configurado + painel com os dois números batidos em setembro</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">📅 30/set</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o1k3">
+          <span class="kr-pct" data-kr="o1k3">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o1k3" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o1k3">📎 <span class="evidence-count" data-kr="o1k3">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o1k3">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o1k3" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o1k3" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🛡️ OKR 2 — Operação blindada para o pico</div>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="okr-card" id="card-o2">
+      <div class="okr-head">
+        <div class="okr-head-left">
+          <div class="okr-tag">OKR 2</div>
+          <div class="okr-title">Time pronto pro dobro de volume no Q4 e pra marca nova (MCHOSE)</div>
+          <div class="okr-desc">Runbook, Jamily operando sozinha e MCHOSE — a blindagem antes da Black Friday.</div>
+        </div>
+        <div>
+          <div class="okr-avg" id="avg-o2">--%</div>
+          <div class="okr-avg-label">média</div>
+        </div>
+      </div>
+
+      <div class="kr-row" data-kr="o2k1">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR1 — Runbook do pico pronto + 1 teste simulando o dobro do volume</div>
+            <div class="kr-proof">Prova: documento do runbook + respostas prontas no SAC + relatório do teste</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">📅 19/set</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o2k1">
+          <span class="kr-pct" data-kr="o2k1">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o2k1" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o2k1">📎 <span class="evidence-count" data-kr="o2k1">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o2k1">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o2k1" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o2k1" style="display:none;"></div>
+      </div>
+
+      <div class="kr-row" data-kr="o2k2">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR2 — Jamily operando sozinha + 1 reserva treinado por canal</div>
+            <div class="kr-proof">Prova: reposição sem acompanhamento + registro de treino da reposição e dos reservas</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">📅 31/ago</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o2k2">
+          <span class="kr-pct" data-kr="o2k2">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o2k2" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o2k2">📎 <span class="evidence-count" data-kr="o2k2">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o2k2">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o2k2" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o2k2" style="display:none;"></div>
+      </div>
+
+      <div class="kr-row" data-kr="o2k3">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR3 — Time pronto pra atender a MCHOSE (FAQ + garantia + treino)</div>
+            <div class="kr-proof">Prova: FAQ publicado + fluxo de garantia aceito pelo RMA + treino + 1ª medição de CSAT/reclamação</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">📅 30/set</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o2k3">
+          <span class="kr-pct" data-kr="o2k3">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o2k3" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o2k3">📎 <span class="evidence-count" data-kr="o2k3">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o2k3">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o2k3" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o2k3" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📡 OKR 3 — Atendimento virando informação que gera ação</div>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="okr-card" id="card-o3">
+      <div class="okr-head">
+        <div class="okr-head-left">
+          <div class="okr-tag">OKR 3</div>
+          <div class="okr-title">O CX mostra pra outras áreas onde a empresa precisa melhorar</div>
+          <div class="okr-desc">VoC mensal, painel semanal e top 3 SKUs problemáticos com ação iniciada.</div>
+        </div>
+        <div>
+          <div class="okr-avg" id="avg-o3">--%</div>
+          <div class="okr-avg-label">média</div>
+        </div>
+      </div>
+
+      <div class="kr-row" data-kr="o3k1">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR1 — Relatório mensal (VoC) apresentado às áreas, com 3 ações combinadas</div>
+            <div class="kr-proof">Prova: relatório do mês + ata com 3 ações, cada uma com dono e prazo</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">🔁 mensal</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o3k1">
+          <span class="kr-pct" data-kr="o3k1">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o3k1" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o3k1">📎 <span class="evidence-count" data-kr="o3k1">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o3k1">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o3k1" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o3k1" style="display:none;"></div>
+      </div>
+
+      <div class="kr-row" data-kr="o3k2">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR2 — Painel de indicadores do SAC atualizado toda semana</div>
+            <div class="kr-proof">Prova: painel atualizado em 100% das semanas + anotações do que os números mostram</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">🔁 semanal</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o3k2">
+          <span class="kr-pct" data-kr="o3k2">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o3k2" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o3k2">📎 <span class="evidence-count" data-kr="o3k2">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o3k2">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o3k2" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o3k2" style="display:none;"></div>
+      </div>
+
+      <div class="kr-row" data-kr="o3k3">
+        <div class="kr-top">
+          <div>
+            <div class="kr-name">KR3 — Top 3 SKUs que mais geram reclamação identificados e com ação iniciada</div>
+            <div class="kr-proof">Prova: lista dos 3 SKUs + ação registrada (área + prazo) + CSAT da MCHOSE no relatório</div>
+          </div>
+          <div class="kr-badges">
+            <span class="deadline-chip">📅 30/set</span>
+          </div>
+        </div>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="0" class="kr-slider" data-kr="o3k3">
+          <span class="kr-pct" data-kr="o3k3">0%</span>
+        </div>
+        <div class="track-fill"><div class="track-fill-inner" data-kr="o3k3" style="width:0%"></div></div>
+        <div class="toggles-row">
+          <div class="evidence-toggle" data-kr="o3k3">📎 <span class="evidence-count" data-kr="o3k3">0</span> evidência(s)</div>
+          <div class="plan-toggle" data-kr="o3k3">🎯 Plano de ação</div>
+        </div>
+        <div class="evidence-panel" data-kr="o3k3" style="display:none;"></div>
+        <div class="plan-panel" data-kr="o3k3" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📊 Histórico de Fechamentos</div>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="history-card">
+      <button class="snap-btn" id="snapBtn">💾 Registrar fechamento do mês atual</button>
+      <div id="snapList"><div class="snap-empty">Nenhum fechamento registrado ainda. Quando fechar o mês, clique no botão acima pra guardar uma foto do progresso e comparar com o mês seguinte.</div></div>
+    </div>
+  </div>
+
+  <div class="save-indicator" id="saveIndicator">&nbsp;</div>
+
+  <div class="footer-note">
+    Dado salvo automaticamente e compartilhado com quem tiver este link — o time inteiro vê e atualiza o mesmo painel. Arraste os controles pra marcar o progresso real de cada KR; a % é sempre uma estimativa de quem está tocando aquela entrega.
+  </div>
+</div>
+
+<script>
+// ====== CONFIGURAÇÃO DO BACKEND (Google Apps Script + Google Sheets) ======
+// Cole aqui a URL do seu Web App do Apps Script (termina com /exec)
+const API_URL = "https://script.google.com/macros/s/AKfycbx09wR2TmLjRPPJ2jYlctSLcv6_qQnuFng1KYrNco3ZVjwkBzXd5EHI-i_3DaO9WHxH/exec";
+
+async function apiGetState(){
+  const res = await fetch(API_URL + '?action=getState');
+  if(!res.ok) throw new Error('Falha ao buscar dados');
+  return await res.json();
+}
+
+async function apiPost(action, payload){
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify({ action: action, ...payload }),
+  });
+  if(!res.ok) throw new Error('Falha ao salvar dados');
+  return await res.json();
+}
+
+const KR_META = {
+  o1k1:{okr:'o1'}, o1k2:{okr:'o1'}, o1k3:{okr:'o1'},
+  o2k1:{okr:'o2'}, o2k2:{okr:'o2'}, o2k3:{okr:'o2'},
+  o3k1:{okr:'o3'}, o3k2:{okr:'o3'}, o3k3:{okr:'o3'},
+};
+const KR_LABELS = {
+  o1k1:'OKR1·KR1 Tag 90%', o1k2:'OKR1·KR2 Auditoria', o1k3:'OKR1·KR3 SLA/CSAT',
+  o2k1:'OKR2·KR1 Runbook', o2k2:'OKR2·KR2 Reposição', o2k3:'OKR2·KR3 MCHOSE',
+  o3k1:'OKR3·KR1 VoC mensal', o3k2:'OKR3·KR2 Painel semanal', o3k3:'OKR3·KR3 Top 3 SKUs',
+};
+const ALL_KRS = Object.keys(KR_META);
+
+let state = {};
+ALL_KRS.forEach(k => state[k] = 0);
+
+function statusColor(pct){
+  if(pct >= 100) return {color:'var(--green)', word:'Pódio! 🏆'};
+  if(pct >= 80) return {color:'var(--green)', word:'Na pista certa'};
+  if(pct >= 50) return {color:'var(--amber)', word:'Acelerando'};
+  return {color:'var(--red)', word:'Freando'};
+}
+
+function renderKR(krId){
+  const pct = state[krId];
+  const s = statusColor(pct);
+  document.querySelectorAll('.kr-slider[data-kr="'+krId+'"]').forEach(el => el.value = pct);
+  document.querySelectorAll('.kr-pct[data-kr="'+krId+'"]').forEach(el => el.textContent = pct + '%');
+  document.querySelectorAll('.track-fill-inner[data-kr="'+krId+'"]').forEach(el => {
+    el.style.width = pct + '%';
+    el.style.background = s.color;
+  });
+}
+
+function renderOKRAvg(okrId){
+  const krs = ALL_KRS.filter(k => KR_META[k].okr === okrId);
+  const avg = Math.round(krs.reduce((a,k)=>a+state[k],0) / krs.length);
+  const el = document.getElementById('avg-'+okrId);
+  el.textContent = avg + '%';
+  const s = statusColor(avg);
+  el.style.color = s.color;
+  const card = document.getElementById('card-'+okrId);
+  if(avg >= 100){ card.classList.add('gold-border'); } else { card.classList.remove('gold-border'); }
+  return avg;
+}
+
+function renderAll(){
+  ALL_KRS.forEach(renderKR);
+  const o1 = renderOKRAvg('o1');
+  const o2 = renderOKRAvg('o2');
+  const o3 = renderOKRAvg('o3');
+  const overall = Math.round((o1+o2+o3)/3);
+  renderGauge(overall);
+}
+
+function renderGauge(pct){
+  const arc = document.getElementById('gaugeArc');
+  const needle = document.getElementById('needle');
+  const status = document.getElementById('gaugeStatus');
+  const total = 204;
+  const offset = total - (total * pct/100);
+  arc.style.strokeDashoffset = offset;
+  const s = statusColor(pct);
+  arc.setAttribute('stroke', s.color.replace('var(--gold)','#ffd23f').replace('var(--green)','#06d6a0').replace('var(--amber)','#ffb703').replace('var(--red)','#ff4d4f'));
+  const angle = -90 + (pct/100)*180;
+  needle.style.transform = 'rotate('+angle+'deg)';
+  status.textContent = pct + '% — ' + s.word;
+  status.style.color = s.color;
+}
+
+function renderCountdown(){
+  const today = new Date();
+  const deadline = new Date('2026-09-20T23:59:59');
+  const diffMs = deadline - today;
+  const days = Math.ceil(diffMs / (1000*60*60*24));
+  const numEl = document.getElementById('countdownNum');
+  const labelEl = document.getElementById('countdownLabel');
+  if(days > 0){
+    numEl.textContent = days;
+    labelEl.textContent = 'dias até a linha de chegada (20/09)';
+  } else if(days === 0){
+    numEl.textContent = '🏁';
+    labelEl.textContent = 'hoje é o dia da chegada!';
+  } else {
+    numEl.textContent = Math.abs(days);
+    labelEl.textContent = 'dias depois da linha de chegada';
+  }
+}
+
+async function saveProgress(){
+  const indicator = document.getElementById('saveIndicator');
+  try{
+    await apiPost('setProgressBulk', { values: state });
+    indicator.textContent = 'salvo ✓ ' + new Date().toLocaleTimeString('pt-BR');
+  }catch(e){
+    indicator.textContent = 'não foi possível salvar agora (confira a conexão)';
+  }
+}
+
+async function loadProgress(){
+  try{
+    const result = await apiGetState();
+    if(result && result.progress){
+      ALL_KRS.forEach(k => { if(typeof result.progress[k] === 'number') state[k] = result.progress[k]; });
+    }
+  }catch(e){ document.getElementById('saveIndicator').textContent = 'não foi possível conectar ao painel (confira a URL da API)'; }
+  renderAll();
+}
+
+function monthLabelPT(date){
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  return months[date.getMonth()] + '/' + date.getFullYear();
+}
+
+async function loadSnapshots(){
+  try{
+    const result = await apiGetState();
+    if(result && result.snapshots) return result.snapshots;
+  }catch(e){ /* nada carregado ainda */ }
+  return [];
+}
+
+async function saveSnapshots(snaps){
+  // snapshots são gravados um de cada vez via addSnapshot (ver botão de fechamento)
+}
+
+function renderSnapshots(snaps){
+  const list = document.getElementById('snapList');
+  if(!snaps || snaps.length === 0){
+    list.innerHTML = '<div class="snap-empty">Nenhum fechamento registrado ainda. Quando fechar o mês, clique no botão acima pra guardar uma foto do progresso e comparar com o mês seguinte.</div>';
+    return;
+  }
+  const sorted = [...snaps].sort((a,b) => new Date(b.date) - new Date(a.date));
+  let html = '';
+  sorted.forEach((snap, idx) => {
+    const prev = sorted[idx+1];
+    const overall = Math.round((snap.avgs.o1+snap.avgs.o2+snap.avgs.o3)/3);
+    html += '<div class="snap-item">';
+    html += '<div class="snap-item-head"><span class="snap-label">'+snap.label+' — '+overall+'% geral</span><span class="snap-date">'+new Date(snap.date).toLocaleDateString('pt-BR')+'</span></div>';
+    ['o1','o2','o3'].forEach(okr => {
+      const val = snap.avgs[okr];
+      let deltaHtml = '';
+      if(prev){
+        const diff = val - prev.avgs[okr];
+        const cls = diff > 0 ? 'up' : (diff < 0 ? 'down' : 'flat');
+        const arrow = diff > 0 ? '↑' : (diff < 0 ? '↓' : '→');
+        deltaHtml = '<span class="delta '+cls+'">'+arrow+' '+(diff>0?'+':'')+diff+'pp</span>';
+      }
+      const okrName = okr === 'o1' ? 'OKR 1' : (okr === 'o2' ? 'OKR 2' : 'OKR 3');
+      html += '<div class="snap-row"><span>'+okrName+': '+val+'%</span>'+deltaHtml+'</div>';
+    });
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+let evidenceState = {};
+ALL_KRS.forEach(k => evidenceState[k] = []);
+const openPanels = {};
+
+function isImageUrl(url){
+  return /\.(jpe?g|png|gif|webp|bmp)(\?.*)?$/i.test(url);
+}
+
+async function loadEvidence(){
+  try{
+    const result = await apiGetState();
+    if(result && result.evidence){
+      ALL_KRS.forEach(k => { if(Array.isArray(result.evidence[k])) evidenceState[k] = result.evidence[k]; });
+    }
+  }catch(e){ /* sem evidências carregadas ainda */ }
+  ALL_KRS.forEach(updateEvidenceCount);
+}
+
+function updateEvidenceCount(krId){
+  document.querySelectorAll('.evidence-count[data-kr="'+krId+'"]').forEach(el => {
+    el.textContent = evidenceState[krId].length;
+  });
+}
+
+function renderEvidencePanel(krId){
+  const panel = document.querySelector('.evidence-panel[data-kr="'+krId+'"]');
+  const entries = evidenceState[krId];
+  let listHtml = '';
+  if(entries.length === 0){
+    listHtml = '<div class="evidence-empty">Nenhuma evidência registrada ainda pra este KR.</div>';
+  } else {
+    [...entries].reverse().forEach(entry => {
+      listHtml += '<div class="evidence-entry">';
+      listHtml += '<div class="evidence-entry-head"><span>'+(entry.author || 'sem autor')+'</span><span>'+new Date(entry.date).toLocaleDateString('pt-BR')+'</span></div>';
+      if(entry.text) listHtml += '<div class="evidence-entry-text">'+escapeHtml(entry.text)+'</div>';
+      if(entry.link){
+        if(isImageUrl(entry.link)){
+          listHtml += '<img class="evidence-entry-img" src="'+escapeHtml(entry.link)+'" alt="evidência" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'inline-block\';">';
+          listHtml += '<a class="evidence-entry-link" style="display:none;" href="'+escapeHtml(entry.link)+'" target="_blank" rel="noopener">🔗 abrir anexo</a>';
+        } else {
+          listHtml += '<a class="evidence-entry-link" href="'+escapeHtml(entry.link)+'" target="_blank" rel="noopener">🔗 abrir anexo</a>';
+        }
+      }
+      listHtml += '</div>';
+    });
+  }
+
+  const formHtml = ''+
+    '<div class="evidence-form">'+
+      '<div class="evidence-form-row"><label>Quem registrou</label><input type="text" class="ev-author" placeholder="ex: Larissa"></div>'+
+      '<div class="evidence-form-row"><label>O que foi feito</label><textarea class="ev-text" placeholder="ex: Lista de motivos definida com o Luís, treino do time marcado pra quinta"></textarea></div>'+
+      '<div class="evidence-form-row"><label>Link, print ou foto (opcional)</label><input type="url" class="ev-link" placeholder="cole o link do Drive, print ou foto aqui"></div>'+
+      '<div class="evidence-hint">Foto/print: suba no Google Drive ou Google Fotos, gere o link de compartilhamento e cole aqui.</div>'+
+      '<button class="evidence-add-btn" data-kr="'+krId+'" style="margin-top:8px;">➕ Adicionar evidência</button>'+
+    '</div>';
+
+  panel.innerHTML = listHtml + formHtml;
+
+  panel.querySelector('.evidence-add-btn').addEventListener('click', async () => {
+    const author = panel.querySelector('.ev-author').value.trim();
+    const text = panel.querySelector('.ev-text').value.trim();
+    const link = panel.querySelector('.ev-link').value.trim();
+    if(!text && !link){ return; }
+    try{
+      const result = await apiPost('addEvidence', { kr: krId, author: author, text: text, link: link });
+      if(result && result.evidence && Array.isArray(result.evidence[krId])){
+        evidenceState[krId] = result.evidence[krId];
+      }
+      updateEvidenceCount(krId);
+      renderEvidencePanel(krId);
+      document.getElementById('saveIndicator').textContent = 'evidência salva ✓ ' + new Date().toLocaleTimeString('pt-BR');
+    }catch(e){
+      document.getElementById('saveIndicator').textContent = 'não foi possível salvar a evidência';
+    }
+  });
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+const PLAN_STEPS = {
+  o1k1: [
+    'Definir com o Luís a lista de motivos (máximo 8): ex. defeito, arrependimento, dúvida de envio, atraso, garantia.',
+    'Cobrar o Luís para deixar o motivo obrigatório para fechar o atendimento no SAC.',
+    'Treinar o time na lista de motivos.',
+    'Acompanhar o % pelo painel do SAC toda semana e corrigir quem não está marcando.',
+  ],
+  o1k2: [
+    'Definir com o Luís os critérios de auditoria (aderência ao script, correção técnica, cordialidade, resolução, uso do sistema).',
+    'Cobrar o Luís para desenvolver o módulo de auditoria dentro do SAC, com sorteio automático de atendimentos.',
+    'Rodar as primeiras auditorias no sistema e gerar a nota inicial (baseline) por atendente no painel.',
+    'Acompanhar toda semana pelo painel e fazer 1 reunião de alinhamento (calibração) das notas.',
+  ],
+  o1k3: [
+    'Levantar o tempo médio de resposta de hoje por canal (ponto de partida).',
+    'Configurar o SLA (tempo máximo de resposta por canal) dentro do SAC.',
+    'Ligar a pesquisa de CSAT no fim do atendimento dentro do SAC.',
+    'Acompanhar pelo painel toda semana e agir onde o número estiver abaixo da meta.',
+  ],
+  o2k1: [
+    'Escrever o passo a passo de como operar no pico.',
+    'Criar respostas prontas para os casos comuns: atraso, produto não recebido, garantia, golpe.',
+    'Salvar essas respostas no SAC (macros).',
+    'Fazer 1 teste simulando o dobro do volume e anotar onde travou.',
+  ],
+  o2k2: [
+    'Colocar a Jamily operando com acompanhamento inicial.',
+    'Escolher 1 pessoa reserva para cada canal crítico.',
+    'Treinar os reservas.',
+    'Confirmar que a Jamily consegue operar sozinha.',
+  ],
+  o2k3: [
+    'Pegar as fichas técnicas da MCHOSE com Produto/Comercial (ou no site oficial).',
+    'Listar as dúvidas comuns e escrever as respostas (FAQ técnico).',
+    'Combinar o fluxo de garantia e troca com o RMA e publicar.',
+    'Treinar o time e medir a primeira reclamação/CSAT da marca.',
+  ],
+  o3k1: [
+    'Montar o modelo do relatório a partir dos dados do SAC (motivos de contato, reclamações, satisfação).',
+    'Puxar os dados do mês e escrever os principais aprendizados.',
+    'Apresentar para Marketing, RMA, Comercial e Produto.',
+    'Sair da reunião com 3 ações (dono + prazo) e cobrar no mês seguinte.',
+  ],
+  o3k2: [
+    'Definir com o Luís quais indicadores entram no painel do SAC.',
+    'Atualizar/validar o painel toda semana.',
+    'Anotar o que os números estão mostrando.',
+    'Levar 1 ponto de atenção para a reunião de liderança.',
+  ],
+  o3k3: [
+    'Cruzar os dados de reclamação e devolução por produto (dados do SAC).',
+    'Achar os 3 SKUs que mais geram problema.',
+    'Levar para Comercial/Produto/RMA e combinar a correção.',
+    'Registrar a ação e acompanhar o resultado.',
+  ],
+};
+
+let planChecks = {};
+ALL_KRS.forEach(k => planChecks[k] = PLAN_STEPS[k].map(() => false));
+
+async function loadPlanChecks(){
+  try{
+    const result = await apiGetState();
+    if(result && result.planChecks){
+      ALL_KRS.forEach(k => { if(Array.isArray(result.planChecks[k])) planChecks[k] = result.planChecks[k]; });
+    }
+  }catch(e){ /* sem checklist carregada ainda */ }
+}
+
+function renderPlanPanel(krId){
+  const panel = document.querySelector('.plan-panel[data-kr="'+krId+'"]');
+  const steps = PLAN_STEPS[krId];
+  let html = '';
+  steps.forEach((step, idx) => {
+    const checked = planChecks[krId][idx];
+    html += '<label class="plan-step'+(checked?' done':'')+'">';
+    html += '<input type="checkbox" data-kr="'+krId+'" data-idx="'+idx+'" '+(checked?'checked':'')+'>';
+    html += '<span>'+escapeHtml(step)+'</span>';
+    html += '</label>';
+  });
+  panel.innerHTML = html;
+  panel.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', async (e) => {
+      const idx = parseInt(e.target.dataset.idx, 10);
+      planChecks[krId][idx] = e.target.checked;
+      renderPlanPanel(krId);
+      try{
+        await apiPost('setPlanCheck', { kr: krId, idx: idx, checked: e.target.checked });
+        document.getElementById('saveIndicator').textContent = 'salvo ✓ ' + new Date().toLocaleTimeString('pt-BR');
+      }catch(err){
+        document.getElementById('saveIndicator').textContent = 'não foi possível salvar agora';
+      }
+    });
+  });
+}
+
+document.querySelectorAll('.plan-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const krId = toggle.dataset.kr;
+    const panel = document.querySelector('.plan-panel[data-kr="'+krId+'"]');
+    const isOpen = panel.style.display !== 'none';
+    if(isOpen){
+      panel.style.display = 'none';
+    } else {
+      renderPlanPanel(krId);
+      panel.style.display = 'block';
+    }
+  });
+});
+
+document.querySelectorAll('.evidence-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const krId = toggle.dataset.kr;
+    const panel = document.querySelector('.evidence-panel[data-kr="'+krId+'"]');
+    const isOpen = panel.style.display !== 'none';
+    if(isOpen){
+      panel.style.display = 'none';
+    } else {
+      renderEvidencePanel(krId);
+      panel.style.display = 'block';
+    }
+  });
+});
+
+document.querySelectorAll('.kr-slider').forEach(slider => {
+  slider.addEventListener('input', (e) => {
+    const kr = e.target.dataset.kr;
+    state[kr] = parseInt(e.target.value, 10);
+    renderKR(kr);
+    renderOKRAvg(KR_META[kr].okr);
+    const o1 = renderOKRAvg('o1'), o2 = renderOKRAvg('o2'), o3 = renderOKRAvg('o3');
+    renderGauge(Math.round((o1+o2+o3)/3));
+  });
+  slider.addEventListener('change', saveProgress);
+});
+
+document.getElementById('snapBtn').addEventListener('click', async () => {
+  const now = new Date();
+  const defaultLabel = monthLabelPT(now);
+  const label = prompt('Nome deste fechamento (ex: mês/ano):', defaultLabel) || defaultLabel;
+  const avgs = {
+    o1: renderOKRAvg('o1'),
+    o2: renderOKRAvg('o2'),
+    o3: renderOKRAvg('o3'),
+  };
+  try{
+    const result = await apiPost('addSnapshot', { label: label, date: now.toISOString(), avgs: avgs, values: {...state} });
+    renderSnapshots(result.snapshots || []);
+    document.getElementById('saveIndicator').textContent = 'fechamento registrado ✓';
+  }catch(e){
+    document.getElementById('saveIndicator').textContent = 'não foi possível registrar o fechamento';
+  }
+});
+
+(async function init(){
+  renderCountdown();
+  try{
+    const fullState = await apiGetState();
+    if(fullState.progress) ALL_KRS.forEach(k => { if(typeof fullState.progress[k] === 'number') state[k] = fullState.progress[k]; });
+    if(fullState.evidence) ALL_KRS.forEach(k => { if(Array.isArray(fullState.evidence[k])) evidenceState[k] = fullState.evidence[k]; });
+    if(fullState.planChecks) ALL_KRS.forEach(k => { if(Array.isArray(fullState.planChecks[k])) planChecks[k] = fullState.planChecks[k]; });
+    renderAll();
+    ALL_KRS.forEach(updateEvidenceCount);
+    renderSnapshots(fullState.snapshots || []);
+    document.getElementById('saveIndicator').textContent = 'conectado ✓';
+  }catch(e){
+    renderAll();
+    document.getElementById('saveIndicator').textContent = 'não foi possível conectar ao painel — confira a URL da API no código';
+  }
+})();
+</script>
+</body>
+</html>
