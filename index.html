@@ -366,6 +366,21 @@ input[type=range]::-moz-range-thumb{
   color: var(--muted);
   font-family: var(--font-mono);
   margin-bottom: 3px;
+  align-items: center;
+}
+.evidence-delete-btn{
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  margin-left: 6px;
+  border-radius: 4px;
+  opacity: 0.7;
+}
+.evidence-delete-btn:hover{
+  opacity: 1;
+  background: var(--red-soft);
 }
 .evidence-entry-text{
   font-size: 13.5px;
@@ -1033,7 +1048,7 @@ function renderEvidencePanel(krId){
   } else {
     [...entries].reverse().forEach(entry => {
       listHtml += '<div class="evidence-entry">';
-      listHtml += '<div class="evidence-entry-head"><span>'+(entry.author || 'sem autor')+'</span><span>'+new Date(entry.date).toLocaleDateString('pt-BR')+'</span></div>';
+      listHtml += '<div class="evidence-entry-head"><span>'+(entry.author || 'sem autor')+'</span><span>'+new Date(entry.date).toLocaleDateString('pt-BR')+' <button class="evidence-delete-btn" data-kr="'+krId+'" data-id="'+entry.id+'" title="Excluir evidência">🗑️</button></span></div>';
       if(entry.text) listHtml += '<div class="evidence-entry-text">'+escapeHtml(entry.text)+'</div>';
       if(entry.link){
         if(isImageUrl(entry.link)){
@@ -1057,6 +1072,25 @@ function renderEvidencePanel(krId){
     '</div>';
 
   panel.innerHTML = listHtml + formHtml;
+
+  panel.querySelectorAll('.evidence-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const evId = btn.dataset.id;
+      if(!confirm('Excluir esta evidência? Essa ação não pode ser desfeita.')) return;
+      try{
+        const result = await apiPost('deleteEvidence', { id: evId });
+        if(result && result.evidence && Array.isArray(result.evidence[krId])){
+          evidenceState[krId] = result.evidence[krId];
+        }
+        updateEvidenceCount(krId);
+        renderEvidencePanel(krId);
+        document.getElementById('saveIndicator').textContent = 'evidência excluída ✓';
+      }catch(err){
+        document.getElementById('saveIndicator').textContent = 'não foi possível excluir a evidência';
+      }
+    });
+  });
 
   panel.querySelector('.evidence-add-btn').addEventListener('click', async () => {
     const author = panel.querySelector('.ev-author').value.trim();
